@@ -1,0 +1,249 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{graphicx}  % For including images
+\usepackage{amsmath}   % For math
+\usepackage{hyperref}  % For clickable links
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{csvsimple}
+\usepackage{booktabs}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{siunitx}
+
+\title{DESIGN AND CONSTRUCTION OF A SIMPLE ELECTRIC FIELD DETECTOR}
+\author{Stephen Adofo Kissi}
+\date{October 23, 2025}
+
+\begin{document}
+	
+	\maketitle
+	
+	\section*{Abstract}
+	This project presents the design and construction of a basic Electric Field Detector using an antenna.
+	
+	\section{Introduction}
+	The motivation for this project stems from early childhood experiments with antennae and curiosity with exploring the detection of electric fields in our DIY Community space. This project is cheap and easier to build. It doesn't require huge sum of money to build.
+	
+	\section{Materials and Methods}
+	Materials used for creating this Electric Field Detector are Arduino-like Printed Circuit Board(PCB), LED Bar, Buzzer and a Telescopic Whip Antenna. There are reasons for choosing to use these materials to create the electric field detector and I will give these reasons. I will also delve into the creation of the Printed Circuit Boards for this project and the Electronic Design Automation(EDA) tool used for creating them.
+	
+	\subsection{Reasons For These Materials}
+	These materials are cheaper and easier to use if you love tinkering with electronic devices and building stuff. Other reasons for their inclusion are explained below.
+	\subsubsection{Telescopic Whip Antenna} 
+	A Telescopic Whip Antenna is a common household electronic material that can be found connected to radio receivers. This monopole is a linear antenna which is sensitive to changes in electric field. In other words, the Telescopic Whip Antenna is an electric antenna. We want an antenna that couples to the electric part of the electromagnetic wave, not the magnetic field part.
+	\subsubsection{Buzzer}
+	The Buzzer is included in this simple Electric Field Detection project because you want an alert or a signal that there is a level of detection. This is a basic output device to signal something to you.
+	\subsubsection{LED Bar}
+	The LED Bar is included because it is a simple and fun way to measure a level of detection. While the Buzzer gives you a signal, the LED Bar gives you at least a way to measure your proximity to detection.
+	\subsubsection{Arduino-like Printed Circuit Board}
+	This PCB is Arduino-like. It has so many similarities to an Arduino Board. In fact, you can replace it with an Arduino Board and it will work just fine. This is included because you want to be able to code and write instructions to assign the LED Bar pins and the Telescopic Whip Antenna to pins on the Micro-controller. This makes it easier to power your project and regulate things.
+	\subsection{Creation of the Printed Circuit Boards}
+	The circuit board designs of this project was developed using an Electronic Design Automation tool like KiCAD. KiCAD is a free tool used by millions of electronics hobbyists around the world.
+	\subsubsection{Microcontroller Circuit Board}
+	The circuit uses Atmega 328P, Connector pin sockets, AVR-ISP-6, CH340C chip, CSTLS Murata Ceramic Resonator, a four pin Push Button and a USB Type-C Plug(male) besides resistors, capacitors and diode. The Atmega 328P is cheaper and easier to configure with Arduino IDE. Decloupling capacitors help to minimize noise in the circuit, prevent malfunction and store energy. \par Four Connector pin sockets were used with two(2) for Digital pins, one for Analog pins and the other for Power. The AVR-ISP-6 makes it easier to program the circuit board and flash firmware straight to the Atmega 328P's flash memory. The Push Button connected to the Reset pin of the AVR-ISP-6 makes it easier to reset bootloader uploads and also for the debugging stages without cycling power. \par The CH340C converts USB data for a serial UART interface and vice versa. In other words, CH340C is basically a USB bus conversion chip connected to the USB Type-C Plug(male) used in the schematic and PCB. \par The CSTLS Ceramic Resonator is connected to the XTAL1 and XTAL2 pins of the Atmega 328P to provide a stable Clock Source. The Atmega has an internal oscillator but its accuracy is low so the Ceramic Resonator here locks it to a stable frequency. Quartz Crystals tend to have higher accuracy than Ceramic Resonators but Ceramic Resonators are cheaper and great for general purpose uses.
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.9\linewidth]{Electric_Field_Detection_Schematic.pdf}
+		\caption{Exported Schematic from KiCAD}
+		\label{fig:schematic}
+	\end{figure}
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.7\linewidth]{electric_field_pcb_layout.png}
+		\caption{PCB Layout from KiCAD}
+		\label{fig:layout}
+	\end{figure}
+	\par If you are familiar with schematic diagrams, you may be wondering why I attached Power Flags when I already have power source captured in the schematic. In KiCAD 8.0 which I used for this, the Electric Rules Checker(ERC) can give an error when Power Flags are not used. Power Flags tell KiCAD that the net it is connected to, has a power supply on it. You may not face same problems with other Electronic Design Automation tools.
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=1\linewidth]{Electric_Field_Detection_3D.png}
+		\caption{Exported 3D View of Circuit from KiCAD}
+		\label{fig:3D PCB}
+	\end{figure}
+	Below are the 3D View of my Printed Circuit Board and the CSV data of the Pad Counts, Via Counts, Track Length, Net Length, Front and Back Copper traces:
+	\centering
+	\resizebox{\textwidth}{!}{%
+	\csvreader[
+	tabular=|c|l|c|c|c|c|c|c|c|c|,
+	table head=\hline NetName & PadCount & ViaCount & ViaLength(mm) & TrackLength(mm) & NetLength(mm) & F.Cu(mm) & B.Cu(mm) \\ \hline,
+	late after line=\\\hline
+	]{Report_file.csv}%
+	{NetName=\name, PadCount=\pads, ViaCount=\vias, ViaLength(mm)=\vlen, TrackLength(mm)=\tlen, NetLength(mm)=\nlen, F.Cu(mm)=\fcu, B.Cu(mm)=\bcu}%
+	{\name & \pads & \vias & \vlen & \tlen & \nlen & \fcu & \bcu}}
+	\subsubsection{LED Bar Circuit Board}
+	The LED Bar Circuit Board has ten(10) LEDs, ten(10) Resistors, 1x10 Connector Pin Sockets and a Buzzer. These LEDs are the 5381H7 Models but they can be replaced with any other great LED models. Some LED models become obsolete in the system as many Manufacturers stop creating them. Each of the Resistors are 1k Ohms. The Resistors are connected in series with the LEDs in the schematic to limit current flow and prevent the LEDs from overheating and damage. The Buzzer is the KCG0601 Model manufactured by Kingstate. It is a magnetic transducer or a passive buzzer.
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.9\linewidth]{Electric_Field_Detection_LED_Bar_Schematic.pdf}
+		\caption{Exported LED Bar Schematic from KiCAD}
+		\label{fig:led_bar-schematic}
+	\end{figure}
+	In KiCAD, after every schematic work the most important thing is to assign footprints for the Gerber file. This was done for both the Microcontroller circuit board and the LED Bar circuit board.
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.9\linewidth]{electric_field_ledbar_pcb_layout.png}
+		\caption{PCB Layout of LED Bar from KiCAD}
+		\label{fig:led-bar-layout}
+	\end{figure}
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.9\linewidth]{Detection_LED Bar_Circuit.png}
+		\caption{3D View of the LED Bar PCB from KiCAD}
+		\label{fig:3d-led-bar-layout}
+	\end{figure}
+	\subsection{Creation of the 3D Design Model of the Container}
+	The 3D design of the circuit boards container can be created using FreeCAD, Fusion 360 and Blender. In this project, I preferred FreeCAD because it's free to use compared with Fusion 360 and it's also great for engineering designs compared with Blender. The STL files will always have to be converted to GCode files before they are 3D printed. The container can also be constructed with simple card-boards and other materials if there are no 3D printers available. There are several 3D designs on www.printables.com and they can be modified. Many 3D designs on Printables come with licenses which prevent Commercial Use but allows Remix Culture so they can be modified. However, I did decide to create my own 3D model prototype of the PCB container using FreeCAD:
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.9\linewidth]{PCB_Container_FreeCAD.png}
+		\caption{3D Model Design Of the PCB Container from FreeCAD}
+		\label{fig:3d-pcb-container-freecad}
+	\end{figure}
+	\par FreeCAD generates an FCStd file and this FCStd file is exported into an STL file. STL formats are great for simple geometric designs. For 3D Printers like Ender 3 Pro, it is recommended to slice the 3D model and convert the STL file into a GCode format. A slicing tool like Ultimaker Cura was used in this project before converting the 3D model into GCode. GCode programming is great for Computer Numerical Control(CNC) drilling and movement of machine parts across the XYZ planes for 3D printing.
+	\section{Results and Discussion}
+	\subsection{Regulating LED Burn Out}
+	All resistors connected across the LED Bar are \SI{1}{\kilo\ohm}. Thus, 
+	\[I = \frac{V}{R}
+	\quad \text{where} \quad V=\SI{5}{\volt} \quad \text{and} \quad R=\SI{1}{\kilo\ohm}. \]
+	\[I = \frac{V}{R}
+	= \frac{\SI{5}{\volt}}{\SI{1}{\kilo\ohm}}
+	= \SI{5}{\milli\ampere}.\]
+	That current is low enough to prevent the LEDs from overheating and burn out. Also, that is the same current across the resistor(R2) in the Microcontroller Circuit board. The higher the current flow, the higher the burn out and eventual damage of the LEDs.
+	\subsection{Programming and Connectivity}
+	The LED Bar pins are connected to ten(10) pins of the Digital connector sockets on the Atmega 328P circuit board. The Atmega 328P board has four(4) Connector socket pins. Two(2) are for Digital(P3 and P4), One is for Analog(P2) and the other is for Power(P1). 
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.9\linewidth]{Atmega328P_connectivity.png}
+		\caption{Atmega 328P Schematic showing Digital, Analog and Power connector sockets}
+		\label{fig:atmega328p-connectivity}
+	\end{figure}
+	The Tx and Rx pins of the Digital socket pin(P4) are used for serial communication. Tx is responsible for transmitting digital signals and Rx is responsible for receiving digital signals. These Tx and Rx pins remains unconnected to the LED Bar pins. The Atmega 328P has Port D with eight(8) pins from PD0 to PD7. PD0 and PD1 are used for USART serial communication, hence Tx and Rx remains internally connected to PD0 and PD1 on the Atmega 328P. The LED Bar pins are connected to pin 2 to pin 7 of the Digital connector socket(P4) and pin 8 to pin 11(MOSI) of the Digital connector socket(P3). Port C on Atmega 328P has seven(7) pins and since we are using them as ADC input channels, pin A0 from the Analog connector socket is internally connected to Port C0. The Antenna is connected to the Analog pin A0.
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.9\linewidth]{barGraph_codes.pdf}
+		\caption{Programming Uploaded To The Microcontroller Board}
+		\label{fig:programming-uploaded-to-board}
+	\end{figure}
+	\subsection{Using Telescopic Whip Antenna As A Field Detector}
+	The Whip antenna is left free floating and connected to Analog pin A0 to be treated as a high-impedance field probe. The Electric Field at a distance(r) from a short monopole is given by:
+	\[
+	E_\theta = \frac{j \eta I_0 l \sin\theta}{2\pi r \lambda} e^{-jkr}
+	\]
+	
+	where:
+	
+	\begin{itemize}
+		\item $\eta$ – intrinsic impedance of free space $(377~\Omega)$
+		\item $I_0$ – current at the antenna feed point (A)
+		\item $l$ – length of the whip (m)
+		\item $\lambda$ – wavelength $(\lambda = c/f)$ (m)
+		\item $r$ – distance from antenna (m)
+		\item $\theta$ – angle from the antenna axis (rad)
+		\item $k$ – wave number $(k = 2\pi/\lambda)$ (rad/m)
+		\item $e^{-jkr}$ – phase propagation term
+	\end{itemize}
+	When the distance between the antenna and the object being detected is 10m, we have:
+	\[
+	E_{\theta} = \frac{j \eta I_0 l \sin{\theta}}{2 \pi r} e^{-jkr}
+	\]
+	
+	\[
+	I_0 = 0.01~\text{A}, \quad l = 1.2~\text{m}, \quad \lambda = 3~\text{m}, \quad \theta = 90^\circ, \quad r = 10~\text{m}
+	\]
+	
+	\[
+	E_{\theta} = \frac{377 \times 0.01 \times 1.2 \times \sin(90^\circ)}{2\pi \times 10} e^{-j(2\pi/3)(10)}
+	\]
+	
+	\[
+	E_{\theta} = (0.072)e^{-j20.94}~\text{V/m}, \quad |E_{\theta}| \approx 0.072~\text{V/m}
+	\]
+	When the distance is decreased to 1m, we have:
+	\[
+	E_{\theta} = \frac{j \eta I_0 l \sin{\theta}}{2 \pi r} e^{-jkr}
+	\]
+	
+	\[
+	I_0 = 0.01~\text{A}, \quad l = 1.2~\text{m}, \quad \lambda = 3~\text{m}, \quad \theta = 90^\circ, \quad r = 1~\text{m}
+	\]
+	
+	\[
+	E_{\theta} = \frac{377 \times 0.01 \times 1.2 \times \sin(90^\circ)}{2\pi \times 1} e^{-j(2\pi/3)(1)}
+	\]
+	
+	\[
+	E_{\theta} = (0.72)e^{-j2.094}~\text{V/m}, \quad |E_{\theta}| \approx 0.72~\text{V/m}
+	\]
+	Let's compare r = 1m to another smaller distance and to see the Electric Field. Let's make r = 0.8m:
+	\[
+	E_{\theta} = \frac{j \eta I_0 l \sin{\theta}}{2 \pi r} e^{-jkr}
+	\]
+	
+	\[
+	I_0 = 0.01~\text{A}, \quad l = 1.2~\text{m}, \quad \lambda = 3~\text{m}, \quad \theta = 90^\circ, \quad r = 0.8~\text{m}
+	\]
+	
+	\[
+	E_{\theta} = \frac{377 \times 0.01 \times 1.2 \times \sin(90^\circ)}{2\pi \times 0.8} e^{-j(2\pi/3)(0.8)}
+	\]
+	
+	\[
+	E_{\theta} = (0.90)e^{-j1.675}~\text{V/m}, \quad |E_{\theta}| \approx 0.90~\text{V/m}
+	\]
+	Hence, from the equation: The smaller the distance between antenna and the observed object, the higher the Electrical Field.
+	\begin{figure}[h!]
+		\centering
+		\begin{minipage}{0.45\textwidth}
+		\centering
+		\includegraphics[width=0.9\linewidth]{EF_detect1.png}
+		\caption{LED Bar is low}
+		\label{fig:led-bar-low}
+	 	\end{minipage}
+	 	\hfill
+		\begin{minipage}{0.45\textwidth}
+		\centering
+		\includegraphics[width=0.9\linewidth]{EF_detect2.png}
+		\caption{LED Bar is High}
+		\label{fig:led-bar-high}
+		\end{minipage}
+	\end{figure}
+	This means the Electric Field(E) is inversely proportional to distance(r). In Figure 11, you can see the LED Bar increase as the antenna gets closer to the laptop charger. This demonstration confirms the mathematics that $E_{\theta}$ increases with a decreasing distance(r). Hence, we have here:
+	\[
+	E_{\theta} \propto \frac{1}{r}
+	\quad \text{that is, the electric field intensity decreases when distance from the antenna increases.}
+	\]
+	The buzzer was not included in the programming because it is connected directly to the LED Bar. When the lights of the LED Bar increases and reaches the highest peak, the buzzer makes a sound alert. The antenna's length also play a role in its sensitivity and ability to detect electric fields of objects being observed. The antenna is capacitive and interacts with the environment. Not only is the Telescopic whip antenna in this Project sensitive to electronic devices but it's also sensitive to conductive objects like the human body, though the human body's electrical field is less than that of the electronic devices being detected. When the antenna capacitance \( C_{\text{ant}} \) and the internal ADC sample-and-hold Atmega 328P capacitance \( C_s \) exchange charge,  the final voltage across both capacitors is given by:
+	\[V_f = V_{\text{ant}} \cdot \frac{C_{\text{ant}}}{C_{\text{ant}} + C_s}\]
+	The ATmega328P's internal ADC sample-and-hold capacitor is approximately:
+	\[C_s \approx 14\ \mathrm{pF}\]
+	\section{Conclusion}
+	The LED Bar determines the proximity of the Detector to an Electric Field source. From observation, conductive objects and the environment itself play a huge role in the Electrical field interactions given how the Intrinsic Impedance of Free Space \( \eta_0 \) is: 
+	\[
+	\boxed{\eta_0 = \sqrt{\frac{\mu_0}{\varepsilon_0}}}
+	\]
+	where  
+	\[
+	\mu_0 = 4\pi \times 10^{-7}\ \mathrm{H/m}
+	\quad \text{is the permeability of free space and,}
+	\]
+	\[
+	\varepsilon_0 = 8.854 \times 10^{-12}\ \mathrm{F/m}
+	\quad \text{is the permittivity of free space.}
+	\]
+	With a Constant value of: $\boxed{\eta_0 = \sqrt{\frac{\mu_0}{\varepsilon_0}} = 376.730\ \Omega.}$
+	\[\quad\] From observation, the length of the antenna affects the rate of detection. The more the length of the antenna increased, the higher its sensitivity became. When I increased the length of the whip antenna, the LED Bar increased and the buzzer made a sound when it got closer to a switched-on light bulb. The range of detection increased when the whip antenna's length was increased and since the antenna acts like a capacitor plate, it can be confirmed that its capacitance increases with length:
+	\[
+	\boxed{
+		C_{\mathrm{ant}} \;\propto\; \frac{L}{\ln\!\left(\dfrac{4h}{r}\right)}
+	}
+	\]
+	Where:
+	\begin{itemize}
+		\item \( C_{\mathrm{ant}} \) = antenna capacitance to circuit ground.
+		\item \( L \) = length of the whip antenna.
+		\item \( h \) = height of the antenna or the entire device above the Earth or any large conductive surface as a reference point.
+		\item \( r \) = radius of the antenna conductor.
+	\end{itemize}
+	
+\end{document}
